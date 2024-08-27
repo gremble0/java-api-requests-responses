@@ -7,23 +7,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("students")
 public class Students {
-    private List<Student> students = new ArrayList<>(){{
-        add(new Student("Nathan", "King"));
-        add(new Student("Dave", "Ames"));
-    }};
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Student create(@RequestBody Student student) {
-        this.students.add(student);
-
-        return student;
+  // TODO: Optional
+  private final List<Student> students = new ArrayList<>() {
+    {
+      this.add(new Student("Nathan", "King"));
+      this.add(new Student("Dave", "Ames"));
     }
+  };
 
-    @GetMapping
-    public List<Student> getAll() {
-        return this.students;
-    }
+  @PostMapping(value = "/students")
+  @ResponseStatus(HttpStatus.CREATED)
+  public Student create(@RequestBody Student student) {
+    this.students.add(student);
+
+    return student;
+  }
+
+  @GetMapping(value = "/students")
+  public List<Student> getAll() {
+    return this.students;
+  }
+
+  @GetMapping(value = "/students/{firstName}")
+  public Student getByFirstName(@PathVariable String firstName) {
+    return this.students
+        .stream()
+        .filter(student -> student.getFirstName().equals(firstName))
+        .findFirst()
+        .orElse(null);
+  }
+
+  @PutMapping(value = "students/{firstName}")
+  public Student updateByFirstName(@PathVariable String firstName, @RequestBody Student newStudent) {
+    return this.students.stream()
+        .filter(student -> student.getFirstName().equals(firstName))
+        .findFirst()
+        .map(oldStudent -> newStudent)
+        .orElse(null);
+  }
 }
