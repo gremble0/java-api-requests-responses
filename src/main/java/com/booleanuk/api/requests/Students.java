@@ -46,4 +46,16 @@ public class Students {
         .map(oldStudent -> newStudent)
         .orElse(null);
   }
+
+  @DeleteMapping(value = "students/{firstName}")
+  public Student deleteByFirstName(@PathVariable String firstName) {
+    return this.students.stream()
+        .filter(student -> student.getFirstName().equals(firstName))
+        .findFirst()
+        .map(studentToRemove -> {
+          this.students.remove(studentToRemove);
+          return studentToRemove;
+        })
+        .orElse(null);
+  }
 }
