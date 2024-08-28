@@ -23,6 +23,10 @@ public class Books {
     return new Book(Books.idCounter++, book.title(), book.numPages(), book.author(), book.genre());
   }
 
+  public static int getIdCounter() {
+    return Books.idCounter;
+  }
+
   @PostMapping
   public Book create(@RequestBody UnidentifiedBook book) {
     Book newBook = Books.addId(book);
