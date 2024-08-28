@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,6 +42,15 @@ public class Languages {
           this.languages.remove(oldLanguage);
           this.languages.add(newLanguage);
           return newLanguage;
+        });
+  }
+
+  @DeleteMapping("/{name}")
+  public Optional<Language> deleteByName(@PathVariable String name) {
+    return this.getByName(name)
+        .map(languageToDelete -> {
+          this.languages.remove(languageToDelete);
+          return languageToDelete;
         });
   }
 }
