@@ -34,26 +34,23 @@ public class Students {
   public Optional<Student> getByFirstName(@PathVariable String firstName) {
     return this.students
         .stream()
-        .filter(student -> student.getFirstName().equals(firstName))
+        .filter(student -> student.firstName().equals(firstName))
         .findFirst();
   }
 
   @PutMapping(value = "/{firstName}")
   public Optional<Student> updateByFirstName(@PathVariable String firstName, @RequestBody Student newStudent) {
-    return this.students.stream()
-        .filter(student -> student.getFirstName().equals(firstName))
-        .findFirst()
+    return this.getByFirstName(firstName)
         .map(oldStudent -> {
-          oldStudent.setLastName(newStudent.getLastName());
+          this.students.remove(oldStudent);
+          this.students.add(newStudent);
           return newStudent;
         });
   }
 
   @DeleteMapping(value = "/{firstName}")
   public Optional<Student> deleteByFirstName(@PathVariable String firstName) {
-    return this.students.stream()
-        .filter(student -> student.getFirstName().equals(firstName))
-        .findFirst()
+    return this.getByFirstName(firstName)
         .map(studentToRemove -> {
           this.students.remove(studentToRemove);
           return studentToRemove;
