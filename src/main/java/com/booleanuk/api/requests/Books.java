@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,6 +30,7 @@ public class Books {
   }
 
   @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
   public Book create(@RequestBody UnidentifiedBook book) {
     Book newBook = Books.addId(book);
     this.books.add(newBook);
@@ -36,11 +39,13 @@ public class Books {
   }
 
   @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public List<Book> getAll() {
     return this.books;
   }
 
   @GetMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
   public Optional<Book> getById(@PathVariable int id) {
     return this.books.stream()
         .filter(book -> book.id() == id)
@@ -48,6 +53,7 @@ public class Books {
   }
 
   @PutMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.CREATED)
   public Optional<Book> updateById(@PathVariable int id, @RequestBody UnidentifiedBook newBook) {
     return this.getById(id)
         .map(oldBook -> {
@@ -59,6 +65,7 @@ public class Books {
   }
 
   @DeleteMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
   public Optional<Book> deleteById(@PathVariable int id) {
     return this.getById(id)
         .map(bookToDelete -> {

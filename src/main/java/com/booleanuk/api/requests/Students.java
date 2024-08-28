@@ -26,11 +26,13 @@ public class Students {
   }
 
   @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public List<Student> getAll() {
     return this.students;
   }
 
   @GetMapping(value = "/{firstName}")
+  @ResponseStatus(HttpStatus.OK)
   public Optional<Student> getByFirstName(@PathVariable String firstName) {
     return this.students
         .stream()
@@ -39,6 +41,7 @@ public class Students {
   }
 
   @PutMapping(value = "/{firstName}")
+  @ResponseStatus(HttpStatus.CREATED)
   public Optional<Student> updateByFirstName(@PathVariable String firstName, @RequestBody Student newStudent) {
     return this.getByFirstName(firstName)
         .map(oldStudent -> {
@@ -49,6 +52,7 @@ public class Students {
   }
 
   @DeleteMapping(value = "/{firstName}")
+  @ResponseStatus(HttpStatus.OK)
   public Optional<Student> deleteByFirstName(@PathVariable String firstName) {
     return this.getByFirstName(firstName)
         .map(studentToRemove -> {
