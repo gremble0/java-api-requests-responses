@@ -43,7 +43,10 @@ public class Students {
     return this.students.stream()
         .filter(student -> student.getFirstName().equals(firstName))
         .findFirst()
-        .map(oldStudent -> newStudent);
+        .map(oldStudent -> {
+          oldStudent.setLastName(newStudent.getLastName());
+          return newStudent;
+        });
   }
 
   @DeleteMapping(value = "/{firstName}")
