@@ -5,10 +5,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/students")
 public class Students {
-  // TODO: Optional
   private final List<Student> students = new ArrayList<>() {
     {
       this.add(new Student("Nathan", "King"));
@@ -16,7 +17,7 @@ public class Students {
     }
   };
 
-  @PostMapping(value = "/students")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Student create(@RequestBody Student student) {
     this.students.add(student);
@@ -24,38 +25,35 @@ public class Students {
     return student;
   }
 
-  @GetMapping(value = "/students")
+  @GetMapping
   public List<Student> getAll() {
     return this.students;
   }
 
-  @GetMapping(value = "/students/{firstName}")
-  public Student getByFirstName(@PathVariable String firstName) {
+  @GetMapping(value = "/{firstName}")
+  public Optional<Student> getByFirstName(@PathVariable String firstName) {
     return this.students
         .stream()
         .filter(student -> student.getFirstName().equals(firstName))
-        .findFirst()
-        .orElse(null);
+        .findFirst();
   }
 
-  @PutMapping(value = "students/{firstName}")
-  public Student updateByFirstName(@PathVariable String firstName, @RequestBody Student newStudent) {
+  @PutMapping(value = "/{firstName}")
+  public Optional<Student> updateByFirstName(@PathVariable String firstName, @RequestBody Student newStudent) {
     return this.students.stream()
         .filter(student -> student.getFirstName().equals(firstName))
         .findFirst()
-        .map(oldStudent -> newStudent)
-        .orElse(null);
+        .map(oldStudent -> newStudent);
   }
 
-  @DeleteMapping(value = "students/{firstName}")
-  public Student deleteByFirstName(@PathVariable String firstName) {
+  @DeleteMapping(value = "/{firstName}")
+  public Optional<Student> deleteByFirstName(@PathVariable String firstName) {
     return this.students.stream()
         .filter(student -> student.getFirstName().equals(firstName))
         .findFirst()
         .map(studentToRemove -> {
           this.students.remove(studentToRemove);
           return studentToRemove;
-        })
-        .orElse(null);
+        });
   }
 }
